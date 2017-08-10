@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import service.AuthorService;
 import service.BookService;
 import service.GenreService;
-import util.Utils;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("provectusTestTask/book")
@@ -59,8 +60,12 @@ public class BookController {
     public String editAuthor(Model model, @PathVariable Integer id){
         Book book = bookService.findById(id);
         model.addAttribute("book", book);
-        model.addAttribute("availableAuthors", Utils.removeSubList(authorService.findAll(), book.getAuthors()));
-        model.addAttribute("availableGenres", Utils.removeSubList(genreService.findAll(), book.getGenres()));
+        List<Author> availableAuthors = authorService.findAll();
+        availableAuthors.removeAll(book.getAuthors());
+        model.addAttribute("availableAuthors", availableAuthors);
+        List<Genre> availableGenres = genreService.findAll();
+        availableGenres.removeAll(book.getGenres());
+        model.addAttribute("availableGenres", availableGenres);
         return "editBook";
     }
 
